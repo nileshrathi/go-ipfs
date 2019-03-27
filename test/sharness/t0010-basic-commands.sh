@@ -41,6 +41,15 @@ test_expect_success "ipfs version --all has all required fields" '
   grep "Golang version" version_all.txt
 '
 
+test_expect_success "ipfs version deps succeeds" '
+  ipfs version deps >deps.txt
+'
+
+test_expect_success "ipfs version deps output looks good" '
+  head -1 deps.txt | grep "go-ipfs (devel)" &&
+  [[ $(tail -n +2 | egrep -v -c "^[^ @]+@v[^ @]+( => [^ @]+@v[^ @]+)?$") -eq 0 ]] ||
+'
+
 test_expect_success "'ipfs commands' succeeds" '
   ipfs commands >commands.txt
 '
