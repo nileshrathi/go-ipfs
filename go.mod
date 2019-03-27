@@ -113,3 +113,5 @@ require (
 	gopkg.in/gemnasium/logrus-airbrake-hook.v2 v2.1.2 // indirect
 	gotest.tools/gotestsum v0.3.3
 )
+
+go 1.12
