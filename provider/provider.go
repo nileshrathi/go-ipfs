@@ -37,7 +37,7 @@ func NewProvider(ctx context.Context, queue *Queue, tracker *Tracker, contentRou
 	return &provider{
 		ctx:            ctx,
 		queue:          queue,
-		tracker:		tracker,
+		tracker:        tracker,
 		contentRouting: contentRouting,
 	}
 }
@@ -64,7 +64,8 @@ func (p *provider) handleAnnouncements() {
 				case c := <-p.queue.Dequeue():
 					isTracked, err := p.tracker.IsTracking(c)
 					if err != nil {
-                        log.Warningf("Unable to determine if tracking: %s, %s", c, err)
+						log.Warningf("Unable to determine if tracking: %s, %s", c, err)
+						continue
 					}
 					if isTracked {
 						continue
@@ -73,11 +74,13 @@ func (p *provider) handleAnnouncements() {
 					log.Info("announce - start - ", c)
 					if err := p.contentRouting.Provide(p.ctx, c, true); err != nil {
 						log.Warningf("Unable to provide entry: %s, %s", c, err)
+						continue
 					}
 					log.Info("announce - end - ", c)
 
 					if err := p.tracker.Track(c); err != nil {
 						log.Warningf("Unable to track entry: %s, %s", c, err)
+						continue
 					}
 				}
 			}
